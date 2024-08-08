@@ -132,4 +132,5 @@ Alchemy: Ixalan, 3/6/LCI, YLCI
 Ravnica Remastered, 3/6/RAV, RVR
 Murders at Karlov Manor, 3/6/MKM, MKM
 Outlaws of Thunder Junction, 3/6/OTJ, OTJ
+Standard Sealed, -/12/OTJ, OTJ MKM LCI WOE MOM ONE BRO DMU SNC NEO VOW MID
 Modern Horizons 3, 3/6/MH3, MH3

@@ -254,21 +254,36 @@ public class SealedCardPoolGenerator {
                 }
 
                 if (sets.size() > 1 ) {
-                    final List<String> setCombos = getSetCombos(sets, nPacks);
-                    if (setCombos == null || setCombos.isEmpty()) {
-                        throw new RuntimeException("Unsupported amount of packs (" + nPacks + ") in a Sealed Deck block!");
-                    }
 
-                    final String p = setCombos.size() > 1 ? SGuiChoose.oneOrNone(Localizer.getInstance().getMessage("lblChoosePackNumberToPlay"), setCombos) : setCombos.get(0);
-                    if (p == null) { return; }
+                    int maxPacks = nPacks;
 
-                    for (String pz : TextUtil.split(p, ',')) {
-                        String[] pps = TextUtil.splitWithParenthesis(pz.trim(), ' ');
-                        String setCode = pps[pps.length - 1];
-                        int nBoosters = pps.length > 1 ? Integer.parseInt(pps[0]) : 1;
-                        while (nBoosters-- > 0) {
-                            this.product.add(block.getBooster(setCode));
+                    int index = 0;
+                    int setsSize = sets.size();
+                    for (String set : sets) {
+                        if (maxPacks <= 0) break;
+                        Integer amount;
+                        if (index == setsSize - 1) {
+                            // If it's the last set, pass the remaining maxPacks as the second argument
+                            boolean confirmed  = SOptionPane.showConfirmDialog(set + " will have " + maxPacks + " packs", set, Localizer.getInstance().getMessage("lblOK"),Localizer.getInstance().getMessage("lblCancel"));
+                            if(!confirmed) {
+                                this.product.clear();
+                                return;
+                            }
+                            amount = maxPacks;
+                        } else {
+                            amount = SGuiChoose.getInteger(set + " (" + maxPacks + " Packs left)", 0, maxPacks);
                         }
+                        if (amount == null) {
+                            this.product.clear();
+                            return;
+                        }
+
+                        int nBoosters = amount;
+                        while (nBoosters-- > 0) {
+                            this.product.add(block.getBooster(set));
+                        }
+                        maxPacks = maxPacks - amount;
+                        index++;
                     }
                 }
                 else {
